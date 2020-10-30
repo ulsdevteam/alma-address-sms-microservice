@@ -8,7 +8,7 @@ const TEMP_ADDRESS_TYPE = 'alternative';
 $jwt_payload = validateJwt($_GET['jwt']);
 if (!$jwt_payload) {
     http_response_code(401);
-    return;
+    exit;
 }
 
 try {

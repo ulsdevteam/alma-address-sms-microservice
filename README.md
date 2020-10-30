@@ -12,3 +12,9 @@ Each endpoint is authenticated using an Alma JWT passed as the `jwt` query param
 | GET | /sms | Returns the user's preferred SMS number, or null if they have not set one
 | PUT | /sms | Adds or updates the user's preferred SMS number | Number is passed as the `sms` query parameter
 | DELETE | /sms | Removes the preferred SMS flag from the user's phone numbers
+
+## License
+
+Copyright University of Pittsburgh.
+
+Freely licensed for reuse under the MIT License.

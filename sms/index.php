@@ -5,12 +5,12 @@ require_once dirname(__DIR__) . '/common.php';
 $jwt_payload = validateJwt($_GET['jwt']);
 if (!$jwt_payload) {
     http_response_code(401);
-    return;
+    exit;
 }
 
 try {
     $user = getAlmaUser($jwt_payload);
-    
+
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'GET':
             $sms = $user->contactInfo->getSmsNumber();
