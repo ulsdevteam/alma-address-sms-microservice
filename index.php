@@ -5,13 +5,18 @@ require_once 'common.php';
 const HOME_ADDRESS_TYPE = 'home';
 const TEMP_ADDRESS_TYPE = 'alternative';
 
-$jwt_payload = validateJwt($_GET['jwt']);
-if (!$jwt_payload) {
-    http_response_code(401);
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
     exit;
 }
 
 try {
+    $jwt_payload = validateJwt($_GET['jwt']);
+    if (!$jwt_payload) {
+        http_response_code(401);
+        exit;
+    }
+
     $user = getAlmaUser($jwt_payload);
 
     switch ($_SERVER['REQUEST_METHOD']) {

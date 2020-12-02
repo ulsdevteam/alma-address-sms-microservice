@@ -2,13 +2,22 @@
 
 require_once dirname(__DIR__) . '/common.php';
 
-$jwt_payload = validateJwt($_GET['jwt']);
-if (!$jwt_payload) {
-    http_response_code(401);
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
+use libphonenumber\NumberParseException;
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
     exit;
 }
 
 try {
+    $jwt_payload = validateJwt($_GET['jwt']);
+    if (!$jwt_payload) {
+        http_response_code(401);
+        exit;
+    }
+
     $user = getAlmaUser($jwt_payload);
 
     switch ($_SERVER['REQUEST_METHOD']) {
@@ -18,9 +27,16 @@ try {
             echo json_encode($sms ? $sms->phone_number : null);
             break;
         case 'PUT':
-            $sms = $_GET['sms'];
-            $user->contactInfo->setSmsNumber($sms);
-            $user->save();
+            $smsInput = filter_var($_GET['sms'], FILTER_SANITIZE_STRING);
+            $phoneUtil = PhoneNumberUtil::getInstance();
+            try {
+                $phoneNumber = $phoneUtil->parse($smsInput, 'US');
+                $sms = $phoneUtil->format($phoneNumber, PhoneNumberFormat::E164);
+                $user->contactInfo->setSmsNumber($sms);
+                $user->save();
+            } catch (NumberParseException $e) {
+                http_response_code(400);
+            }            
             break;
         case 'DELETE':
             $user->contactInfo->unsetSmsNumber();

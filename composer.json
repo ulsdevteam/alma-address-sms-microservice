@@ -16,7 +16,8 @@
         "scriptotek/primo-search": "dev-add-jwt-pubkey",
         "php-http/guzzle6-adapter": "^2.0",
         "http-interop/http-factory-guzzle": "^1.0",
-        "firebase/php-jwt": "^5.2"
+        "firebase/php-jwt": "^5.2",
+        "giggsey/libphonenumber-for-php": "^8.12"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
