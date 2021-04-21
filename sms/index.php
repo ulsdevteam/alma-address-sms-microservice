@@ -36,7 +36,7 @@ try {
                 $user->save();
             } catch (NumberParseException $e) {
                 http_response_code(400);
-                error_log(print_r($e);
+                error_log(print_r($e));
             }            
             break;
         case 'DELETE':
