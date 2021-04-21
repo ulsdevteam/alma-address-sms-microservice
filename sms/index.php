@@ -36,6 +36,7 @@ try {
                 $user->save();
             } catch (NumberParseException $e) {
                 http_response_code(400);
+                error_log(print_r($e);
             }            
             break;
         case 'DELETE':
@@ -49,6 +50,6 @@ try {
     }
 } catch (Throwable $e) {
     http_response_code(500);
-	error_log($e->getCode());
-	error_log($e->getMessage());
+    error_log($e->getCode());
+    error_log($e->getMessage());
 }
