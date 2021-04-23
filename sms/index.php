@@ -6,7 +6,9 @@ use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\NumberParseException;
 
-class InvalidPhoneNumberException extends \Exception {}
+class InvalidPhoneNumberException extends libphonenumber\NumberParseException {
+    const FAILS_ISVALIDNUMBER = 5;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -35,7 +37,7 @@ try {
                 $phoneNumber = $phoneUtil->parse($smsInput, 'US');
                 $sms = $phoneUtil->format($phoneNumber, PhoneNumberFormat::E164);
                 if (!$phoneUtil->isValidNumber($phoneNumber,'US')){
-                    throw new InvalidPhoneNumberException('Invalid number:'.' '.$phoneNumber);
+                    throw new InvalidPhoneNumberException(InvalidPhoneNumberException::FAILS_ISVALIDNUMBER,'Invalid number:'.' '.$phoneNumber);
                 }
                 $user->contactInfo->setSmsNumber($sms);
                 $user->save();
@@ -43,10 +45,6 @@ try {
                 //ex. sms=iii
                 http_response_code(400);
                 error_log($e->__toString());
-            } catch (InvalidPhoneNumberException $e){
-                //ex. sms=44-44
-                http_response_code(400);
-                error_log($e->getMessage());
             }
             break;
         case 'DELETE':
