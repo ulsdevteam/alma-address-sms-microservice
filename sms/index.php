@@ -32,12 +32,20 @@ try {
             try {
                 $phoneNumber = $phoneUtil->parse($smsInput, 'US');
                 $sms = $phoneUtil->format($phoneNumber, PhoneNumberFormat::E164);
+                if (!$phoneUtil->isValidNumber($phoneNumber,'US')){
+                    throw new Exception('Invalid number:'.' '.$phoneNumber);
+                }
                 $user->contactInfo->setSmsNumber($sms);
                 $user->save();
             } catch (NumberParseException $e) {
+                //ex. sms=iii
                 http_response_code(400);
-                error_log(print_r($e));
-            }            
+                error_log($e->__toString());
+            } catch (Exception $e){
+                //ex. sms=44-44
+                http_response_code(400);
+                error_log($e->getMessage());
+            }
             break;
         case 'DELETE':
             $user->contactInfo->unsetSmsNumber();
