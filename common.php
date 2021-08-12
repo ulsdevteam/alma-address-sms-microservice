@@ -38,7 +38,7 @@ function validateJwt(string $jwt)
     } else {
         $cached_key = getPublicKeyFromPrimo();
         file_put_contents($cache_file_path, $cached_key);
-        file_put_contents($log_file_path, 'public key retrieved at ' . date('c') . '\n', FILE_APPEND);
+        file_put_contents($log_file_path, 'public key retrieved at ' . date('c') . "\n", FILE_APPEND);
     }
     try {
         $jwt_payload = JWT::decode($jwt, $cached_key, ['ES256']);
@@ -51,9 +51,9 @@ function validateJwt(string $jwt)
             return null;
         } else {
             file_put_contents($cache_file_path, $public_key);
-            file_put_contents($log_file_path, 'public key updated at ' . date('c') . '\n', FILE_APPEND);
+            file_put_contents($log_file_path, 'public key updated at ' . date('c') . "\n", FILE_APPEND);
         }
-        $jwt_payload = JWT::decode($jwt, $cached_key, ['ES256']);
+        $jwt_payload = JWT::decode($jwt, $public_key, ['ES256']);
         return $jwt_payload;
     }
 }
